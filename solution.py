@@ -11,7 +11,12 @@ def solution(p: float, x: np.array) -> tuple:
     # Не меняйте название функции и её аргументы
     alpha = 1 - p
     n = len(x)
-    s2 = np.var(x, ddof=1)
-    left = (n - 1) * s2 / chi2.ppf(1 - alpha / 2, df=n - 1)
-    right = (n - 1) * s2 / chi2.ppf(alpha / 2, df=n - 1)
-    return np.sqrt(left), np.sqrt(right)
+    x2 = np.array([xi**2 for xi in x])
+    x2_mean = x2.mean()
+
+    chi2_rv = chi2(df = 2 * n)
+
+    left = chi2_rv.ppf(1 - alpha / 2)
+    right = chi2_rv.ppf(alpha / 2)
+
+    return np.sqrt(n * x2_mean / (left * 19)), np.sqrt(n * x2_mean / (right * 19))
